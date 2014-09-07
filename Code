@@ -1,0 +1,492 @@
+#define pos cos;
+    string StartDate;
+    StartDate = "0";
+    string EndDate;
+    EndDate = "0";
+    string filename;
+    string StartMonth;
+    string StartDay;
+    string StartYear;
+    string EndMonth;
+    string EndDay;
+    string EndYear;
+    int tokenCounter;
+    int inputCounter;
+    
+    int StartMonthInt;
+    StartMonthInt=0;
+    int StartDayInt;
+    StartDayInt=0;
+    int StartYearInt;
+    StartYearInt=0;
+    int EndMonthInt;
+    EndMonthInt=0;
+    int EndDayInt;
+    EndDayInt=0;
+    int EndYearInt;
+    EndYearInt=0;
+    
+    
+    int i=1;
+    tokenCounter=0;
+    inputCounter=0;
+    
+	/* print help */
+	if (ac == 1) {
+		print_help();
+		return 0;
+    }
+    
+    
+    // while loop that is true when there is an argument
+    while (i<ac) {
+        string Temp = av[i];
+        if ((Temp.find ("-st")!=string::npos) && ((ac==3) || (ac==5))){
+            cout << "Oops! Did You Mean To Enter A Start Date?" << endl;
+            return 0;
+        }
+        else if ((Temp.find ("-et")!=string::npos) && ((ac==3) || (ac==5))){
+            cout << "Oops! Did You Mean To Enter An End Date?" << endl;
+            return 0;
+        }
+        // if indentifiers (-st & -et) found, next argument is start date and end date, respectively
+        else if (Temp.find ("-st")!=string::npos) {
+            inputCounter=inputCounter+3;
+            StartDate = av[i+1];
+            i=i+2;
+        }
+        else if (Temp.find ("-et")!=string::npos) {
+            inputCounter=inputCounter+2;
+            EndDate = av[i+1];
+            i=i+2;
+        }
+        // user enters plea for help
+        else if (Temp.find ("-h")!=string::npos) {
+            print_help();
+            return 0;
+        }
+        
+        // argument must be file name
+        else {
+            strInFile=av[i];
+            i=i+1;
+        }
+    }
+    
+    
+    // delimiter (seperator) set as period
+    std::string Temp;
+    std::string delimiter = ".";
+    
+    size_t cos = 0;
+    std::string token;
+    
+    // finding "." as seperators and assigning seperated values to tokens
+    if (StartDate!="0"){
+        while ((cos = StartDate.find(delimiter)) != std::string::npos) {
+            token = StartDate.substr(0, cos);
+            StartDate.erase(0, cos + delimiter.length());
+            if (tokenCounter==0) {
+                StartYear=token;
+            } else if (tokenCounter==1) {
+                StartMonth=token;
+                // if too many digits entered display error and stop
+            } else {
+                cout << "Error. Too Many Values in Start Date." << endl;
+                return 0;
+            }
+            tokenCounter++;
+        }
+    }
+    
+    tokenCounter=0;
+    
+    // finding "." as seperators and assigning seperated values to tokens
+    if (EndDate!="0") {
+        while ((cos = EndDate.find(delimiter)) != std::string::npos) {
+            token = EndDate.substr(0, cos);
+            EndDate.erase(0, cos + delimiter.length());
+            if (tokenCounter==0) {
+                EndYear=token;
+            } else if (tokenCounter==1) {
+                EndMonth=token;
+                // if too many digits entered display error and stop
+            } else {
+                cout << "Error. Too Many Values in End Date." << endl;
+                return 0;
+            }
+            tokenCounter++;
+        }
+    }
+    
+    tokenCounter=0;
+    
+    // what is left after delimiter finishes are the year values
+    StartDay=StartDate;
+    EndDay=EndDate;
+    
+    
+    // converting str values to ints
+    StartMonthInt = atoi (StartMonth.c_str());
+    StartDayInt = atoi (StartDay.c_str());
+    StartYearInt = atoi (StartYear.c_str());
+    EndMonthInt = atoi (EndMonth.c_str());
+    EndDayInt = atoi (EndDay.c_str());
+    EndYearInt = atoi (EndYear.c_str());
+    
+    if ((inputCounter==3) && ((ac > 3) && (ac!=5)) && (StartYearInt==0)) {
+        cout << "Error. Invalid OR Incomplete Start Date Input Value." << endl;
+        return 0;
+    }
+    
+    if ((inputCounter==2) && ((ac > 3) && (ac!=5)) && (EndYearInt==0)) {
+        cout << "Error. Invalid OR Incomplete End Date Input Value." << endl;
+        return 0;
+    }
+    
+    if ((StartYearInt>EndYearInt) && (EndDate!="0")) {
+        cout << "Oops! Did You Mean To Switch Your Values?" << endl;
+        return 0;
+    }
+    
+    if ((StartYearInt==EndYearInt) && (StartMonthInt>EndMonthInt) && (EndDate!="0")) {
+        cout << "Oops! Did You Mean To Switch Your Values?" << endl;
+        return 0;
+    }
+    
+    if ((StartYearInt==EndYearInt) && (StartMonthInt==EndMonthInt) && (StartDayInt>EndDayInt) && (EndDate!="0")) {
+        cout << "Oops! Did You Mean To Switch Your Values?" << endl;
+        return 0;
+    }
+    
+    
+    if ((StartMonthInt==0) && (StartYearInt!=0)) {
+        cout << "Error. Missing Start Month and Start Day Values" << endl;
+        return 0;
+    }
+    
+    if ((StartDayInt==0) && (StartYearInt!=0)) {
+        cout << "Error. Missing Start Day Value" << endl;
+        return 0;
+    }
+    
+    
+    if ((EndMonthInt==0) && (EndYearInt!=0)) {
+        cout << "Error. Missing End Month and End Day Values" << endl;
+        return 0;
+    }
+    
+    if ((EndDayInt==0) && (EndYearInt!=0)) {
+        cout << "Error. Missing End Day Value" << endl;
+        return 0;
+    }
+    
+    if ((StartYearInt==0) && (StartDate!="0")) {
+        cout << "Error. Missing Start Year, Month, AND Day Values" << endl;
+        return 0;
+    }
+    
+    if ((EndYearInt==0) && (EndDate!="0")) {
+        cout << "Error. Missing End Year, Month, AND Day Values" << endl;
+        return 0;
+    }
+    
+    if (((StartMonthInt==2) || (StartMonthInt==4) || (StartMonthInt==6) || (StartMonthInt==9) || (StartMonthInt==11)) && (StartDayInt==31)) {
+        cout << "Error. That Day Does Not Exist. Please Enter A Valid Start Day Value." << endl;
+        return 0;
+    }
+    
+    if (((EndMonthInt==2) || (EndMonthInt==4) || (EndMonthInt==6) || (EndMonthInt==9) || (EndMonthInt==11)) && (EndDayInt==31)) {
+        cout << "Error. That Day Does Not Exist. Please Enter A Valid End Day Value." << endl;
+        return 0;
+    }
+    
+    if ((StartMonthInt==2) && (StartDayInt==30)) {
+        cout << "Error. That Day Does Not Exist. Please Enter A Valid Start Day Value." << endl;
+        return 0;
+    }
+    
+    if ((StartMonthInt < 0) || (StartMonthInt > 12)) {
+        cout << "Error. That Month Does Not Exist. Please Enter A Valid Start Month Value." << endl;
+        return 0;
+    }
+    
+    if (((StartYearInt < 1000) || (StartYearInt > 9999)) && StartYearInt!=0) {
+        cout << "Error. Please Enter A Valid Start Year Value." << endl;
+        return 0;
+    }
+    
+    if ((StartDayInt < 0) || (StartDayInt > 31)) {
+        cout << "Error. That Day Does Not Exist. Please Enter A Valid End Day Value." << endl;
+        return 0;
+    }
+    
+    if ((EndMonthInt < 0) || (EndMonthInt > 12)) {
+        cout << "Error. That Month Does Not Exist. Please Enter A Valid End Month Value." << endl;
+        return 0;
+    }
+    
+    if (((EndYearInt < 1000) || (EndYearInt > 9999)) && (EndYearInt!=0)) {
+        cout << "Error. Please Enter A Valid End Year Value." << endl;
+        return 0;
+    }
+    
+    if ((EndDayInt < 0) || (EndDayInt > 31)) {
+        cout << "Error. That Day Does Not Exist. Please Enter A Valid Day Value." << endl;
+        return 0;
+    }
+    
+    if (inputCounter==3) {
+        cout << "Note. Only Start Date Entered." << endl;
+    }
+    else if (inputCounter==2) {
+        cout << "Note. Only End Date Entered." << endl;
+    }
+    else if (inputCounter==5) {
+        cout << "Note. Both Start AND End Dates Entered." << endl;
+    }
+    else if (inputCounter==0) {
+        cout << "Note. No Start OR End Date Entered. All Data Will Be Printed" << endl;
+    }
+    else {
+        cout << "Error. Too Many Start AND/OR Dates Entered." << endl;
+        return 0;
+    }
+    
+    tokenCounter=0;
+    
+    if ((StartYearInt %4 !=0) && (StartMonthInt==2) && (StartDayInt==29)) {
+        cout << "Error. " << StartYearInt << " Is NOT A Leap Year. Please Enter A Valid Date." << endl;
+        return 0;
+    }
+    
+    if ((StartYearInt %4 ==0) && (StartMonthInt==2) && (StartDayInt==29) && (StartYearInt %100 ==0) && (StartYearInt %400 ==0)) {
+        cout << "Note. Leap Year Date Entered." << endl;
+    }
+    else if ((StartYearInt %4 ==0) && (StartMonthInt==2) && (StartDayInt==29) && StartYearInt %100 ==0) {
+        cout << "Error. " << StartYearInt << " Is NOT A Leap Year. Please Enter A Valid Date." << endl ;
+        return 0;
+    }
+
+   // in case user wants to add hour, minute, second specificity
+    // StartHourInt = atoi (StartHour.c_str());
+    // StartMinuteInt = atoi (StartMinute.c_str());
+    // StartSecondInt = atoi (StartSecond.c_str());
+    // EndHourInt = atoi (EndHour.c_str());
+    // EndMinuteInt = atoi (EndMinute.c_str());
+    // EndSecondInt = atoi (EndSecond.c_str()); 
+// function call
+            if (is_data_within_range(fswTlm.time, StartYearInt, StartMonthInt, StartDayInt, EndYearInt, EndMonthInt, EndDayInt)) {
+                // if conditions met, then packets will print
+
+// function call
+            if (is_data_within_range(paramTlm.time, StartYearInt, StartMonthInt, StartDayInt, EndYearInt, EndMonthInt, EndDayInt)) {
+                print_param_packet_dn(&outFileParamDN, &paramTlm);
+                // if conditions met then packets will print
+
+ 
+bool is_data_within_range(uint32_t packetTime, int StartYearInt, int StartMonthInt, int StartDayInt, int EndYearInt, int EndMonthInt, int EndDayInt)
+
+{
+    int PacketYearInt;
+    int PacketMonthInt;
+    int PacketDayInt;
+    
+    int tokenCounter;
+    tokenCounter=0;
+    
+    // in case user wants to add hour, minute, second specificity
+    
+    // int PacketHourInt;
+    // int PacketMinuteInt;
+    // int PacketSecondInt;
+    
+    time_t rawTime;
+    struct tm *timeinfo;
+    char timestring[100];
+    
+    
+    rawTime = packetTime;
+    timeinfo = localtime (&rawTime);
+    
+    // assigns year, month, day values to respective ints (values from packet)
+    strftime(&timestring[0], 100, "%Y", timeinfo);
+    PacketYearInt = atoi (timestring);
+    
+    strftime(&timestring[0], 100, "%m", timeinfo);
+    PacketMonthInt = atoi (timestring);
+    
+    strftime(&timestring[0], 100, "%d", timeinfo);
+    PacketDayInt = atoi (timestring);
+    
+    // in case user wants to add hour, minute, second specificity
+    
+    // strftime(&timestring[0], 100, "%H", timeinfo);
+    // packetHourInt = atoi (timestring);
+    // strftime(&timestring[0], 100, "%M", timeinfo);
+    // packetMinuteInt = atoi (timestring);
+    // strftime(&timestring[0], 100, "%S", timeinfo);
+    // packetSecondInt = atoi (timestring);
+    
+    /*
+     cout << EndYearInt << " Test End YEAR" << endl;
+     cout << EndDayInt << " Test End DAY" << endl;
+     cout << EndMonthInt << " Test End MONTH" << endl;
+     cout << StartMonthInt << " Test Start MONTH" << endl;
+     cout << StartDayInt << " Test Start DAY" << endl;
+     cout << StartYearInt << " Test Start YEAR" << endl;
+     cout << PacketYearInt << " Test Packet YEAR" << endl;
+     cout << PacketMonthInt << " Test Packet MONTH" << endl;
+     cout << PacketDayInt << " Test Packet DAY" << endl;
+     */
+    
+    
+    // testing when NO values entered
+    if ((EndYearInt==0) && (EndDayInt==0) && (EndMonthInt==0) && (StartYearInt==0) && (StartDayInt==0) && (StartMonthInt==0)) {
+        return true;
+    }
+    // testing when ONLY end date value entered
+    else if ((StartMonthInt==0) && (StartDayInt==0) && (StartYearInt==0) && (EndYearInt!=0) && (EndMonthInt!=0) && (EndDayInt!=0)){
+        if (EndYearInt < PacketYearInt){
+            return false;
+        }
+        else if (EndYearInt > PacketYearInt) {
+            return true;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt > PacketMonthInt)) {
+            return true;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt < PacketMonthInt)) {
+            return false;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt == PacketMonthInt) && (EndDayInt > PacketDayInt)) {
+            return true;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt == PacketMonthInt) && (EndDayInt < PacketDayInt)) {
+            return false;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt == PacketMonthInt) && (EndDayInt == PacketDayInt)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    // testing when ONLY start date value entered
+    else if ((EndYearInt==0) && (EndMonthInt==0) && (EndDayInt==0) && (StartMonthInt!=0) && (StartDayInt!=0) && (StartYearInt!=0)) {
+        if (StartYearInt > PacketYearInt){
+            return false;
+        }
+        else if (StartYearInt < PacketYearInt) {
+            return true;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt < PacketMonthInt)) {
+            return true;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt > PacketMonthInt)) {
+            return false;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt == PacketMonthInt) && (StartDayInt < PacketDayInt)) {
+            return true;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt == PacketMonthInt) && (StartDayInt > PacketDayInt)) {
+            return false;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt == PacketMonthInt) && (StartDayInt == PacketDayInt)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    // testing when both start date AND end date values entered
+    else if ((EndYearInt!=0) && (EndMonthInt!=0) && (EndDayInt!=0) && (StartMonthInt!=0) && (StartDayInt!=0) && (StartYearInt!=0)) {
+        if (EndYearInt < PacketYearInt){
+            return false;
+        }
+        else if (EndYearInt > PacketYearInt) {
+            tokenCounter++;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt > PacketMonthInt)) {
+            tokenCounter++;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt < PacketMonthInt)) {
+            return false;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt == PacketMonthInt) && (EndDayInt > PacketDayInt)) {
+            tokenCounter++;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt == PacketMonthInt) && (EndDayInt < PacketDayInt)) {
+            return false;
+        }
+        else if ((EndYearInt == PacketYearInt) && (EndMonthInt == PacketMonthInt) && (EndDayInt == PacketDayInt)) {
+            tokenCounter++;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+    
+    
+    if (tokenCounter == 1) {
+        if (StartYearInt > PacketYearInt){
+            return false;
+        }
+        else if (StartYearInt < PacketYearInt) {
+            tokenCounter++;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt < PacketMonthInt)) {
+            tokenCounter++;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt > PacketMonthInt)) {
+            return false;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt == PacketMonthInt) && (StartDayInt < PacketDayInt)) {
+            tokenCounter++;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt == PacketMonthInt) && (StartDayInt > PacketDayInt)) {
+            return false;
+        }
+        else if ((StartYearInt == PacketYearInt) && (StartMonthInt == PacketMonthInt) && (StartDayInt == PacketDayInt)) {
+            tokenCounter++;
+        }
+        else {
+            return false;
+        }
+    }
+    
+    else {
+        return false;
+    }
+    
+    if (tokenCounter == 2) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+ 
+        cout << "Make sure [filename.bin] was entered correctly" << endl;
+ 
+cout << endl << "Usage: dsac_telem_parser [telemetry file].bin [options] " << endl << endl;
+    
+    cout << "Options: " << endl << endl;
+    
+    cout << "  -st     Start Date" << endl;
+    cout << "          To enter start date type:" << endl;
+    cout << "          '-st' followed by YYYY.MM.DD values" << endl;
+    cout << "          For example: -st 1997.03.27 OR -st 1997.3.27" << endl << endl;
+    
+    cout << "  -et     End Date" << endl;
+    cout << "          To enter end date type:" << endl;
+    cout << "          '-et' followed by YYYY.MM.DD values" << endl;
+    cout << "          For example: -et 2003.08.27 OR -et 2003.8.27" << endl << endl;
+    
+    cout << "  -h      Help" << endl << endl;
+
